@@ -1,0 +1,39 @@
+module DFSApp
+{
+  interface ClientToServer
+  {
+  	exception FileNotFoundFailure { 
+        string reason; 
+      }; 
+    exception FileLockedForWriteFailure { 
+        string reason; 
+      }; 
+    string sayHello();
+    long openFileForRead(in string fileTitle) raises(FileNotFoundFailure,FileLockedForWriteFailure);
+    string readFromFile(in long fileID, in long location, in long length);
+    long openFileForWrite(in string fileTitle) raises(FileNotFoundFailure,FileLockedForWriteFailure);
+    string writeToFile(in long fileID, in long location, in string contents);
+    oneway void closeFile(in long fileID);
+   	oneway void shutdown();
+  };
+  
+  
+  
+  interface ServerToServer
+  {
+  	exception FileNotFoundFailure { 
+        string reason; 
+      }; 
+    exception FileLockedForWriteFailure { 
+        string reason; 
+      }; 
+      
+    string readFile(in string fileTitle)
+      raises(FileNotFoundFailure,FileLockedForWriteFailure);
+    string readFileAndLockForWrite(in string fileTitle)
+      raises(FileNotFoundFailure,FileLockedForWriteFailure);
+    oneway void lockFileForWrite(in string fileTitle);
+    oneway void shutdown();
+    string echoYourHostName();
+  };
+};
